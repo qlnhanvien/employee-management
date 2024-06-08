@@ -12,12 +12,12 @@
         <div class="md:w-1/2 px-5">
             <h2 class="text-2xl font-bold text-[#002D74]">Reset Password</h2>
             <p class="text-sm mt-4 text-[#002D74]">Please enter your new password</p>
-            <form class="mt-6" action="{{ route('password.update') }}" method="POST">
+            <form class="mt-6" action="#" method="POST">
                 @csrf
                 <input type="hidden" name="token" value="{{ $token }}">
                 <div>
                     <label class="block text-gray-700">Email Address</label>
-                    <input type="email" name="email" value="{{ $email ?? old('email') }}" placeholder="Enter Email Address" class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none" autofocus autocomplete required>
+                    <input type="email" name="email" value="{{ $email ?? old('email') }}" readonly placeholder="Enter Email Address"  class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border  focus:outline-none" autofocus autocomplete required>
                 </div>
                 <div class="mt-4">
                     <label class="block text-gray-700">New Password</label>
@@ -25,8 +25,14 @@
                 </div>
                 <div class="mt-4">
                     <label class="block text-gray-700">Confirm Password</label>
-                    <input type="password" name="password_confirmation" placeholder="Confirm New Password" class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none" required>
+                    <input type="password" name="confirmPassword" placeholder="Confirm New Password" class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none" required>
                 </div>
+
+                @if ($message = Session::get('err'))
+                    <div class="alert alert-success alert-block">
+                        <strong>{{ $message }}</strong>
+                    </div>
+                @endif
 
                 <button type="submit" class="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg
                 px-4 py-3 mt-6">Reset password</button>

@@ -13,7 +13,7 @@ Route::post('register', [AuthController::class, 'postRegister']);
 Route::get('forgot', [AuthController::class, 'forgot'])->name('forgot');
 Route::post('forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
-Route::post('reset-password', [AuthController::class, 'reset'])->name('password.update');
+Route::post('reset-password/{token}', [AuthController::class, 'reset'])->name('password.update');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard');

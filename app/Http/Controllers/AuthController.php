@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPasswordMail;
 
 class AuthController extends Controller
 {
@@ -65,51 +68,60 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
+        // Tìm người dùng bằng email
+        $user = User::where('email', $request->email)->first();
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        if ($user) {
+            // Tạo token đặt lại mật khẩu
+            $token = Password::createToken($user);
 
-        if ($status == Password::RESET_LINK_SENT) {
-            $token = Password::createToken(User::where('email', $request->email)->first());
-            $resetUrl = url(config('app.url').route('password.reset', ['token' => $token, 'email' => $request->email], false));
+            DB::table('password_resets')->insert([
+                'email' => $request ->email,
+                'token' => $token,
+                'created_at' => now(),
+            ]);
 
-            Mail::to($request->email)->send(new ResetPasswordMail($resetUrl));
+            // Tạo URL đặt lại mật khẩu
+            $resetUrl = url(route('password.reset', ['token' => $token, 'email' => $request->email]));
+            dd($resetUrl);
+            $email = $request->email;
+            // Gửi email bằng ResetPasswordMail mailable của bạn
+            Mail::to($email)->send(new ResetPasswordMail($resetUrl));
 
-            return back()->with(['status' => __($status)]);
+            return back()->with('status', 'We have emailed your password reset link!');
         }
 
-        return back()->withErrors(['email' => __($status)]);
+        return back()->withErrors(['email' => 'We can\'t find a user with that email address.']);
     }
 
     public function showResetForm(Request $request, $token = null)
     {
-        return view('auth.passwords.reset')->with(
+        return view('emails.resetPassword')->with(
             ['token' => $token, 'email' => $request->email]
         );
     }
 
     public function reset(Request $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
 
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password),
-                    'remember_token' => \Str::random(60),
-                ])->save();
-            }
-        );
+//        dd($request->all());
 
-        return $status === Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('status', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+
+        $token = DB::table('password_resets')
+                    ->select('token')
+                    ->where('token', $request->token)
+                    ->where('email', $request->email)
+                    ->get();
+
+
+        if($token) {
+            DB::table('users')
+                ->where('email', $request->email)
+                ->update(['password' => Hash::make($request->password)]);
+        }
+
+        return redirect()->route('login')->with('success', 'You have successfully changed your password.');
+
     }
 
     public function logout(Request $request)
