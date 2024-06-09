@@ -43,7 +43,7 @@
                 @endif
 
                 <div class="text-right mt-2">
-                    <a href="{{route('forgot')}}" class="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700">Forgot Password?</a>
+                    <a href="{{route('forgot-password')}}" class="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700">Forgot Password?</a>
                 </div>
 
                 <button type="submit" class="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg

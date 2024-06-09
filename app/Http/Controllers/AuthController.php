@@ -53,10 +53,10 @@ class AuthController extends Controller
 
             $req->merge(['password'=> Hash::make($req->password)]);
             User::create($req ->all());
+            return redirect()->route('login')->with('success','Account successfully created');
         } catch (\Throwable $th){
             dd($th);
         }
-        return redirect()->route('login')->with('success','Account successfully created');
     }
 
     public function forgot()
@@ -64,44 +64,38 @@ class AuthController extends Controller
         return view('auth.forgot');
     }
 
-    public function sendResetLinkEmail(Request $request)
+    public function sendResetLinkEmail(Request $req)
     {
-        $request->validate(['email' => 'required|email']);
+        try {
+            $req->validate(['email' => 'required|email']);
+            $user = User::where('email', $req->email)->first();
+            if ($user) {
+                $token = Password::createToken($user);
 
-        // Tìm người dùng bằng email
-        $user = User::where('email', $request->email)->first();
+                DB::table('password_resets')->insert([
+                    'email' => $req ->email,
+                    'token' => $token,
+                    'created_at' => now(),
+                ]);
 
-        if ($user) {
-            // Tạo token đặt lại mật khẩu
-            $token = Password::createToken($user);
-
-            DB::table('password_resets')->insert([
-                'email' => $request ->email,
-                'token' => $token,
-                'created_at' => now(),
-            ]);
-
-            // Tạo URL đặt lại mật khẩu
-            $resetUrl = url(route('password.reset', ['token' => $token, 'email' => $request->email]));
-            dd($resetUrl);
-            $email = $request->email;
-            // Gửi email bằng ResetPasswordMail mailable của bạn
-            Mail::to($email)->send(new ResetPasswordMail($resetUrl));
-
-            return back()->with('status', 'We have emailed your password reset link!');
+                $resetUrl = url(route('password.reset', ['token' => $token, 'email' => $req->email]));
+                Mail::to($req->email)->send(new ResetPasswordMail($resetUrl));
+                return back()->with('status', 'We have emailed your password reset link!');
+            }
+            return back()->withErrors(['email' => 'We can\'t find a user with that email address.']);
+        } catch (\Throwable $th) {
+            dd($th);
         }
-
-        return back()->withErrors(['email' => 'We can\'t find a user with that email address.']);
     }
 
-    public function showResetForm(Request $request, $token = null)
+    public function showResetForm(Request $req, $token = null)
     {
         return view('emails.resetPassword')->with(
-            ['token' => $token, 'email' => $request->email]
+            ['token' => $token, 'email' => $req->email]
         );
     }
 
-    public function reset(Request $request)
+    public function reset(Request $req)
     {
 
 //        dd($request->all());
@@ -109,26 +103,26 @@ class AuthController extends Controller
 
         $token = DB::table('password_resets')
                     ->select('token')
-                    ->where('token', $request->token)
-                    ->where('email', $request->email)
+                    ->where('token', $req->token)
+                    ->where('email', $req->email)
                     ->get();
 
 
         if($token) {
             DB::table('users')
-                ->where('email', $request->email)
-                ->update(['password' => Hash::make($request->password)]);
+                ->where('email', $req->email)
+                ->update(['password' => Hash::make($req->password)]);
         }
 
         return redirect()->route('login')->with('success', 'You have successfully changed your password.');
 
     }
 
-    public function logout(Request $request)
+    public function logout(Request $req)
     {
         Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $req->session()->invalidate();
+        $req->session()->regenerateToken();
 
         return redirect()->route('login')->with('success', 'You have successfully logged out.');
     }

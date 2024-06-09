@@ -18,7 +18,7 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect('/dashboard'); // Thay thế bằng route bạn muốn chuyển hướng
+            return redirect('/dashboard');
         }
 
         return $next($request);
