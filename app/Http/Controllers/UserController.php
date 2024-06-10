@@ -13,6 +13,6 @@ class UserController extends Controller
 
     public function dashboard()
     {
-        return view('welcome');
+        return view('dashboard');
     }
 }
