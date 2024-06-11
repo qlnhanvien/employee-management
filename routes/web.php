@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NhanVienController;
+
+# Frontend Routes
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postLogin']);
@@ -15,7 +18,14 @@ Route::post('forgot-password', [AuthController::class, 'sendResetLinkEmail'])->n
 Route::get('reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password/{token}', [AuthController::class, 'reset'])->name('password.update');
 
+# Admin
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
+    # NhanVien
+    Route::prefix('nhanvien')->group(function () {
+        Route::get('/', [NhanVienController::class, 'index'])->name('admin.profile');
+    });
+
 });
