@@ -14,6 +14,11 @@ class ChiTietBangChamCong extends Model
     protected $fillable = [
         'MaNV',
         'MaBangChamCong',
+        'CheckIn',
+        'CheckOut',
+        'Date',
+        'TotalTiem',
+        'Note',
     ];
 
     public function bangChamCong()

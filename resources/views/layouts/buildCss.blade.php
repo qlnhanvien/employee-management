@@ -12,4 +12,13 @@
     body {
         font-feature-settings: "cv03", "cv04", "cv11";
     }
+    .page {
+        margin-top: -20px !important;
+    }
+
+    .table th, .table td {
+        text-align: center; /* Căn giữa tất cả các phần tử trong bảng */
+        vertical-align: middle; /* Căn giữa theo chiều dọc */
+    }
+
 </style>
