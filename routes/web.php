@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NhanVienController;
 
 # Frontend Routes
@@ -20,7 +20,7 @@ Route::post('reset-password/{token}', [AuthController::class, 'reset'])->name('p
 
 # Admin
 Route::middleware(['auth'])->group(function () {
-    Route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+    Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
     # NhanVien

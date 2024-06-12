@@ -11,6 +11,7 @@
 {{--<script src="{{ asset('js/demo-theme.min.js') }}?1684106062"></script>--}}
 <div class="page">
     @include('partials.header')
+{{--    @include('partials.aside')--}}
     <div class="main-content">
         @yield('main')
     </div>
