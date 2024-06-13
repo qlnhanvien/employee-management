@@ -22,7 +22,6 @@ class NhanVienCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'MaNV' => 'required|unique:NhanVien,MaNV',
             'TenNV' => 'required',
             'Phai' => 'required',
             'NgaySinh' => 'required',
@@ -34,8 +33,6 @@ class NhanVienCreateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'MaNV.required' => 'Mã nhân viên không được để trống',
-            'MaNV.unique' => 'Mã nhân viên đã tồn tại',
             'TenNV.required' => 'Tên nhân viên không được để trống',
             'Phai.required' => 'Phái nhân viên không được để trống',
             'NgaySinh.required' => 'Ngày sinh nhân viên không được để trống',

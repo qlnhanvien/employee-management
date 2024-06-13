@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [NhanVienController::class, 'store'])->name('admin.nhanvien.store');
         Route::get('/edit/{MaNV}', [NhanVienController::class, 'edit'])->name('admin.nhanvien.edit');
         Route::post('/update/{MaNV}', [NhanVienController::class, 'update'])->name('admin.nhanvien.update');
+        Route::delete('/delete/{MaNV}', [NhanVienController::class, 'delete'])->name('admin.nhanvien.delete');
     });
 
 });

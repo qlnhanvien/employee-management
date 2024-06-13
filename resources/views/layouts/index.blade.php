@@ -8,7 +8,7 @@
     @yield('css')
 </head>
 <body >
-{{--<script src="{{ asset('js/demo-theme.min.js') }}?1684106062"></script>--}}
+<script src="{{ asset('js/demo-theme.min.js') }}?1684106062"></script>
 <div class="page">
     @include('partials.header')
 {{--    @include('partials.aside')--}}

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class NhanVien extends Model
 {
@@ -20,6 +22,19 @@ class NhanVien extends Model
         'DiaChiNV',
         'DienThoaiNV',
     ];
+
+    public static function generateMaNV()
+    {
+        $lastNhanVien = DB::table('NhanVien')->orderBy('MaNV', 'desc')->first();
+
+        if (!$lastNhanVien) {
+            return 'NV-001';
+        }
+
+        $lastIdNumber = (int)Str::after($lastNhanVien->MaNV, 'NV-');
+        $newIdNumber = $lastIdNumber + 1;
+        return 'NV-' . str_pad($newIdNumber, 3, '0', STR_PAD_LEFT);
+    }
 
     public function chiTietBangChamCongs()
     {

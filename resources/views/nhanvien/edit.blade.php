@@ -29,6 +29,11 @@
         <div class="container-xl">
             <div class="row row-cards">
                 <div class="col-12">
+                    @if (session('success'))
+                        <div id="success-alert" class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                     <form id="form-add-nhan-vien" class="card" method="post" action="{{ route('admin.nhanvien.update', $nhanvien->MaNV) }}">
                         @csrf
                         <div class="card-header">
@@ -36,7 +41,7 @@
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label required">Mã NV
+                                <label class="form-label required readonly">Mã NV
                                 </label>
                                 <div>
                                     <input type="text" class="form-control" name="MaNV" value="{{ $nhanvien->MaNV }}" readonly>
