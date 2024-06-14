@@ -17,7 +17,7 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <h2 class="page-title">
-                        Quản lý nhân viên
+                        Quản lý khen thưởng
                     </h2>
                 </div>
                 <div class="col-auto ms-auto d-print-none">
@@ -56,17 +56,17 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Timesheets</h3>
+                            <h3 class="card-title">Bảng khen thưởng</h3>
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                 <tr>
-                                    <th class="w-1">Mã nhân viên</th>
-                                    <th>Tên nhân viên</th>
-                                    <th>Giới tính</th>
-                                    <th>Ngày sinh</th>
-                                    <th>Địa chỉ</th>
+                                    <th class="w-1">Mã khen thưởng</th>
+                                    <th>Khen thưởng tập thể</th>
+                                    <th>Khen thưởng cá nhân</th>
+                                    <th>Số tiền khen thưởng</th>
+                                    <th></th>
                                     <th>Điện thoại</th>
                                     <th>Chức năng</th>
                                 </tr>

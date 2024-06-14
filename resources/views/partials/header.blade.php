@@ -120,7 +120,7 @@
                     <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
                         <span class="avatar avatar-sm" style="background-image: url(./static/avatars/000m.jpg)"></span>
                         <div class="d-none d-xl-block ps-2">
-                            <div>SonBui</div>
+                            <div>{{Auth::user()->name}}</div>
                             <div class="mt-1 small text-muted">Admin</div>
                         </div>
                     </a>
@@ -179,6 +179,30 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="{{ route('admin.nhanvien.index') }}">
                                     Quản lý nhân viên
+                                </a>
+                                <a class="dropdown-item" href="{{ route('admin.nhanvien.index') }}">
+                                    Khen thưởng/ Kỉ luật
+                                </a>
+                                <a class="dropdown-item" href="{{ route('admin.nhanvien.index') }}">
+                                    Quyết Định Tuyển Dụng
+                                </a>
+                                <a class="dropdown-item" href="{{ route('admin.nhanvien.index') }}">
+                                    Quản lý chấm công
+                                </a>
+                                <a class="dropdown-item" href="{{ route('admin.nhanvien.index') }}">
+                                    Phụ Trợ
+                                </a>
+                                <a class="dropdown-item" href="{{ route('admin.nhanvien.index') }}">
+                                    Quản lý lương
+                                </a>
+                                <a class="dropdown-item" href="{{ route('admin.nhanvien.index') }}">
+                                    Quản lý hợp đồng nhân sự
+                                </a>
+                                <a class="dropdown-item" href="{{ route('admin.nhanvien.index') }}">
+                                   Quản lý bảo hiểm
+                                </a>
+                                <a class="dropdown-item" href="{{ route('admin.nhanvien.index') }}">
+                                    Quản lý chức vụ
                                 </a>
                             </div>
                         </li>
