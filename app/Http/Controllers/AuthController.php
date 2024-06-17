@@ -10,9 +10,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPasswordMail;
+use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    //-------------------------MVC-----------------------------//
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
@@ -97,10 +100,6 @@ class AuthController extends Controller
 
     public function reset(Request $req)
     {
-
-//        dd($request->all());
-
-
         $token = DB::table('password_resets')
                     ->select('token')
                     ->where('token', $req->token)
@@ -125,6 +124,55 @@ class AuthController extends Controller
         $req->session()->regenerateToken();
 
         return redirect()->route('login')->with('success', 'You have successfully logged out.');
+    }
+
+    //-------------------------API-----------------------------//
+    public function loginApi(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (!$token = Auth::attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->respondWithToken($token);
+    }
+
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60 // getTTL() returns minutes
+        ]);
+    }
+
+    public function registerApi(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        // Create user
+        $user = User::create([
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+        ]);
+
+        // Create token
+        $token = JWTAuth::fromUser($user);
+
+        return response()->json([
+            'message' => 'User successfully registered',
+            'user' => $user,
+            'token' => $token
+        ], 201);
     }
 
 }

@@ -16,11 +16,12 @@ class NhanVien extends Model
 
     protected $fillable = [
         'MaNV',
-        'TenNV',
-        'Phai',
+        'HoTen',
+        'GioiTinh',
         'NgaySinh',
-        'DiaChiNV',
-        'DienThoaiNV',
+        'SDT',
+        'Email',
+        'DiaChi',
     ];
 
     public static function generateMaNV()
