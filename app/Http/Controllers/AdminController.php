@@ -28,4 +28,19 @@ class AdminController extends Controller
         $hopDongs = $this->hopDong->paginate(10);
         return view('index', compact('nhanViens','phongBans','hopDongs'));
     }
+
+
+    //-------------------Api-------------
+    public function dashboardApi()
+    {
+        dd(123);
+//        $nhanViens = $this->nhanVien->with('chiTietBangChamCongs')->paginate(10);
+//        $phongBans = $this->phongBan->paginate(10);
+//        $hopDongs = $this->hopDong->paginate(10);
+//        return response()->json([
+//            'nhanViens'=>$nhanViens,
+//            'phongBans'=>$phongBans,
+//            'hopDongs'=>$hopDongs
+//        ]);
+    }
 }

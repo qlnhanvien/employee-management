@@ -56,9 +56,8 @@ class AuthController extends Controller
 
             $req->merge(['password'=> Hash::make($req->password)]);
             User::create($req ->all());
-            return redirect()->route('login')->with('success','Account successfully created');
+            return redirect()->route('loginApi')->with('success','Account successfully created');
         } catch (\Throwable $th){
-            dd($th);
         }
     }
 
@@ -113,7 +112,7 @@ class AuthController extends Controller
                 ->update(['password' => Hash::make($req->password)]);
         }
 
-        return redirect()->route('login')->with('success', 'You have successfully changed your password.');
+        return redirect()->route('loginApi')->with('success', 'You have successfully changed your password.');
 
     }
 
@@ -123,7 +122,7 @@ class AuthController extends Controller
         $req->session()->invalidate();
         $req->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'You have successfully logged out.');
+        return redirect()->route('loginApi')->with('success', 'You have successfully logged out.');
     }
 
     //-------------------------API-----------------------------//
@@ -131,7 +130,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!$token = Auth::attempt($credentials)) {
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -143,7 +142,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60 // getTTL() returns minutes
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
         ]);
     }
 
