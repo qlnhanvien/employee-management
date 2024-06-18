@@ -14,7 +14,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \App\Http\Middleware\UserAuthen::class,
+        // Global middleware
     ];
 
     /**
@@ -25,7 +25,17 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\UserAuthen::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+
+//        'auth' => \App\Http\Middleware\UserAuthen::class,
+//        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
     ];
+
+    protected $middlewareGroups = [
+        'api' => [
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\UserAuthen::class,
+        ],
+    ];
+
 }

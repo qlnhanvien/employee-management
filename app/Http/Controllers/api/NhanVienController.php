@@ -1,26 +1,28 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
 use App\Http\Requests\NhanVien\NhanVienCreateRequest;
 use App\Http\Requests\NhanVien\NhanVienUpdateRequest;
 use App\Models\NhanVien;
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class NhanVienController extends Controller
+class NhanVienController
 {
     private $nhanVien;
 
-    public function __construct(NhanVien $nhanVien)
-    {
-        $this->nhanVien = $nhanVien;
-    }
+        public function __construct(NhanVien $nhanVien)
+        {
+            $this->nhanVien = $nhanVien;
+        }
 
     public function index()
     {
         $nhanViens = $this->nhanVien->paginate(5);
-        return view('nhanvien.index', compact('nhanViens'));
+        return response()->json([
+            'nhanviens' => $nhanViens],
+            200);
     }
 
     public function create()
@@ -31,7 +33,6 @@ class NhanVienController extends Controller
     public function store(NhanVienCreateRequest $request)
     {
         $maNV = NhanVien::generateMaNV();
-//        dd($maNV);
         try {
             $this->nhanVien->create([
                 'MaNV' => $maNV,
