@@ -13,20 +13,25 @@ class NhanVien extends Model
     use HasFactory, Notifiable;
 
     protected $table = 'NhanVien';
+    protected $primaryKey = 'MaNV';
+    public $incrementing = false;
 
     protected $fillable = [
         'MaNV',
-        'HoTen',
-        'GioiTinh',
+        'TenNV',
+        'Phai',
         'NgaySinh',
-        'SDT',
-        'Email',
-        'DiaChi',
+        'DienThoaiNV',
+        'DiaChiNV',
     ];
+
+//    protected $casts = [
+//        'MaNV' => 'string',
+//    ];
 
     public static function generateMaNV()
     {
-        $lastNhanVien = DB::table('NhanVien')->orderBy('MaNV', 'desc')->first();
+        $lastNhanVien = self::orderBy('MaNV', 'desc')->first();
 
         if (!$lastNhanVien) {
             return 'NV-001';

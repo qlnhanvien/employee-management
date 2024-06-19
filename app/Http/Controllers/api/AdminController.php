@@ -28,6 +28,6 @@ class AdminController
             'nhanViens'=>$nhanViens,
             'phongBans'=>$phongBans,
             'hopDongs'=>$hopDongs
-        ]);
+        ],200);
     }
 }

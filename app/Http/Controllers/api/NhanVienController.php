@@ -11,30 +11,25 @@ use Illuminate\Support\Facades\Log;
 class NhanVienController
 {
     private $nhanVien;
-
-        public function __construct(NhanVien $nhanVien)
+    public function __construct(NhanVien $nhanVien)
         {
             $this->nhanVien = $nhanVien;
         }
-
-    public function index()
+    public function getAll()
     {
-        $nhanViens = $this->nhanVien->paginate(5);
-        return response()->json([
-            'nhanviens' => $nhanViens],
-            200);
+        $nhanViens = $this->nhanVien->all();
+        return response()->json(['nhanviens' => $nhanViens], 200);
     }
-
-    public function create()
+    public function getID($MaNV)
     {
-        return view('nhanvien.create');
+        $nhanVien = $this->nhanVien->findOrFail($MaNV);
+        return response()->json(['nhanvien' => $nhanVien], 200);
     }
-
-    public function store(NhanVienCreateRequest $request)
+    public function create(NhanVienCreateRequest $request)
     {
-        $maNV = NhanVien::generateMaNV();
         try {
-            $this->nhanVien->create([
+            $maNV = NhanVien::generateMaNV();
+            $nhanVien = $this->nhanVien->create([
                 'MaNV' => $maNV,
                 'TenNV' => $request->TenNV,
                 'Phai' => $request->Phai,
@@ -43,47 +38,56 @@ class NhanVienController
                 'DienThoaiNV' => $request->DienThoaiNV,
             ]);
 
+            return response()->json(['nhanvien' => $nhanVien],200);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
-
-        return redirect()->route('admin.nhanvien.index')->with('success', 'Nhân viên đã được thêm thành công!');
     }
-
-    public function edit($MaNV)
-    {
-        $nhanvien = $this->nhanVien->where('MaNV', $MaNV)->first();
-
-        return view('nhanvien.edit', compact('nhanvien'));
-    }
-
     public function update(NhanVienUpdateRequest $request, $MaNV)
     {
+        $nhanVien = NhanVien::find($MaNV);
+
+        if (!$nhanVien) {
+            return response()->json(['message' => 'Nhân viên không tồn tại.'], 404);
+        }
+
         try {
             $this->nhanVien->where('MaNV', $MaNV)->update([
-                'MaNV' => $request->MaNV,
+                'MaNV' =>  $MaNV,
                 'TenNV' => $request->TenNV,
                 'Phai' => $request->Phai,
                 'NgaySinh' => $request->NgaySinh,
                 'DiaChiNV' => $request->DiaChiNV,
                 'DienThoaiNV' => $request->DienThoaiNV,
             ]);
+            $nhanvien = $this->nhanVien->find($MaNV);
+            return response()->json(['nhanvien' => $nhanvien,],200);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            return response()->json([
+                'message' => 'Cập nhật thất bại.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        return redirect()->route('admin.nhanvien.index');
     }
-
     public function delete($MaNV)
     {
-        try {
-            $this->nhanVien->where('MaNV', $MaNV)->delete();
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
+        $nhanVien = $this->nhanVien->where('MaNV', $MaNV)->first();
+
+        if (!$nhanVien) {
+            return response()->json(['message' => 'Nhân viên không tồn tại.'], 404);
         }
 
-        return redirect()->route('admin.nhanvien.index');
+        $nhanVienData = $nhanVien->toArray();
+        $deleteResult = $nhanVien->delete();
+
+        if ($deleteResult) {
+            return response()->json([
+                'message' => 'Nhân viên đã được xóa thành công.',
+                'nhanvien' => $nhanVienData
+            ], 200);
+        } else {
+            return response()->json(['message' => 'Xóa nhân viên thất bại.'], 500);
+        }
     }
 }
