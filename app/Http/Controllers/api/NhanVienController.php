@@ -5,8 +5,6 @@ namespace App\Http\Controllers\api;
 use App\Http\Requests\NhanVien\NhanVienCreateRequest;
 use App\Http\Requests\NhanVien\NhanVienUpdateRequest;
 use App\Models\NhanVien;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class NhanVienController
 {

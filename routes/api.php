@@ -6,8 +6,10 @@ use App\Http\Controllers\api\NhanVienController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::post('register', [AuthController::class, 'registerApi'])->withoutMiddleware([\App\Http\Middleware\UserAuthen::class]);;
+Route::post('register', [AuthController::class, 'registerApi'])->withoutMiddleware([\App\Http\Middleware\UserAuthen::class]);
 Route::post('login', [AuthController::class, 'loginApi'])->withoutMiddleware([\App\Http\Middleware\UserAuthen::class]);
+Route::post('sendMail', [AuthController::class, 'sendResetLinkEmail'])->withoutMiddleware([\App\Http\Middleware\UserAuthen::class]);
+
 
 Route::middleware('auth:api')->group(function () {
     Route::get('dashboardApi', [AdminController::class, 'dashboardApi']);
@@ -19,7 +21,4 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/update/{MaNV}', [NhanVienController::class, 'update']);
         Route::delete('/delete/{MaNV}', [NhanVienController::class, 'delete']);
     });
-
 });
-
-

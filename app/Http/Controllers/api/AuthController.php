@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Mail\ResetPasswordMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -15,18 +19,12 @@ class AuthController
     {
         $credentials = $request->only('email', 'password');
 
-//        try {
-//
-//        }catch (Exception $e) {
-//
-//        }
         if (!$token = Auth::guard('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         return $this->respondWithToken($token);
     }
-
     protected function respondWithToken($token)
     {
         return response()->json([
@@ -35,7 +33,6 @@ class AuthController
             'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
         ]);
     }
-
     public function registerApi(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -62,5 +59,28 @@ class AuthController
             'user' => $user,
             'token' => $token
         ], 201);
+    }
+    public function sendResetLinkEmail(Request $req)
+    {
+        try {
+            $req->validate(['email' => 'required|email']);
+            $user = User::where('email', $req->email)->first();
+            if ($user) {
+                $token = Password::createToken($user);
+
+                DB::table('password_resets')->insert([
+                    'email' => $req ->email,
+                    'token' => $token,
+                    'created_at' => now(),
+                ]);
+
+                $resetUrl = url(route('password.reset', ['token' => $token, 'email' => $req->email]));
+                Mail::to($req->email)->send(new ResetPasswordMail($resetUrl));
+                return back()->with('status', 'We have emailed your password reset link!');
+            }
+            return back()->withErrors(['email' => 'We can\'t find a user with that email address.']);
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
 }
