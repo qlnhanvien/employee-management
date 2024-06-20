@@ -60,27 +60,85 @@ class AuthController
             'token' => $token
         ], 201);
     }
-    public function sendResetLinkEmail(Request $req)
+    public function sendResetLinkEmail(Request $request)
     {
         try {
-            $req->validate(['email' => 'required|email']);
-            $user = User::where('email', $req->email)->first();
-            if ($user) {
-                $token = Password::createToken($user);
+            $request->validate(['email' => 'required|email']);
+            $user = User::where('email', $request->email)->first();
 
-                DB::table('password_resets')->insert([
-                    'email' => $req ->email,
-                    'token' => $token,
-                    'created_at' => now(),
-                ]);
-
-                $resetUrl = url(route('password.reset', ['token' => $token, 'email' => $req->email]));
-                Mail::to($req->email)->send(new ResetPasswordMail($resetUrl));
-                return back()->with('status', 'We have emailed your password reset link!');
+            if (!$user) {
+                return response()->json(['message' => 'We can\'t find a user with that email address.'], 404);
             }
-            return back()->withErrors(['email' => 'We can\'t find a user with that email address.']);
-        } catch (\Throwable $th) {
-            dd($th);
+
+            $token = Password::createToken($user);
+            DB::table('password_resets')->insert([
+                'email' => $request ->email,
+                'token' => $token,
+                'created_at' => now(),
+            ]);
+
+            $baseUrl = config('app.url');
+            $resetUrl = $baseUrl . '/api/reset-password/' . $token . '?email=' . $request->email;
+            Mail::to($request->email)->send(new ResetPasswordMail($resetUrl));
+
+            return response()->json(['status' => 'success', 'message' => 'We have emailed your password reset link!'], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Xử lý khi validation thất bại
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            // Xử lý các lỗi khác
+            return response()->json(['error' => 'An unexpected error occurred.'], 500);
         }
+    }
+    public function resetPassword(Request $request)
+    {
+        try {
+            $token = DB::table('password_resets')
+                ->select('token')
+                ->where('token', $request->token)
+                ->where('email', $request->email)
+                ->first();
+
+            if(!$token) {
+                return response()->json(['message' => 'Invalid token.'], 404);
+            }
+
+            if (now()->subMinutes(config('auth.passwords.users.expire'))->isAfter($token->created_at)) {
+                return response()->json(['message' => 'This password reset token is invalid or has expired.'], 404);
+            }
+
+            $validator = Validator::make($request->all(), [
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()->all()], 422);
+            }
+
+            User::where('email', $request->email)
+                ->update(['password' => Hash::make($request->password)]);
+
+            DB::table('password_resets')->where('email', $request->email)->delete();
+
+            return response()->json(['message' => 'Your password has been reset successfully.'], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to reset password.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function logoutApi(Request $request)
+    {
+        $token = $request->bearerToken();
+
+        if ($token) {
+            Auth::guard('api')->invalidate(true);
+
+            return response()->json(['message' => 'Successfully logged out'], 200);
+        }
+
+        return response()->json(['error' => 'No active user session was found'], 400);
     }
 }

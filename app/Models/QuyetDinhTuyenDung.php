@@ -10,9 +10,10 @@ class QuyetDinhTuyenDung extends Model
     use HasFactory;
 
     protected $table = 'QuyetDinhTuyenDung';
+    protected $primaryKey = 'SoQuyetDinhTuyenDung';
+    public $incrementing = true;
 
     protected $fillable = [
-        'SoQuyetDinhTuyenDung',
         'NgayQuyetDinhTuyenDung',
         'ThoiGianThuViec',
         'MucLuongThuViec',

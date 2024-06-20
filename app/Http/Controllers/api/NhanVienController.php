@@ -20,8 +20,20 @@ class NhanVienController
     }
     public function getID($MaNV)
     {
-        $nhanVien = $this->nhanVien->findOrFail($MaNV);
-        return response()->json(['nhanvien' => $nhanVien], 200);
+        try {
+            $nhanVien = $this->nhanVien->find($MaNV);
+
+            if ($nhanVien) {
+                return response()->json(['quyetdinh' => $nhanVien], 200);
+            }
+
+            return response()->json(['err' => 'Nhan vien khong ton tai'], 404);
+        } catch (\Exception $e)  {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
     }
     public function create(NhanVienCreateRequest $request)
     {

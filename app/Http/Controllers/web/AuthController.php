@@ -58,6 +58,7 @@ class AuthController extends Controller
             User::create($req ->all());
             return redirect()->route('loginApi')->with('success','Account successfully created');
         } catch (\Throwable $th){
+            dd($th);
         }
     }
 
