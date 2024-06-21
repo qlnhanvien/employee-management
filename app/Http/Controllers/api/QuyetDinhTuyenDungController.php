@@ -61,14 +61,13 @@ class QuyetDinhTuyenDungController
         if (!$QDTD) {
             return response()->json(['message' => 'Quyet dinh tuyen dung khong ton tai.'], 404);
         }
-
         try {
-            $this->quyetDinhTuyenDung->where('MaQDTD', $MaQDTD)->update([
-                'MaNV' => $request->MaNV,
+            $this->quyetDinhTuyenDung->where('SoQuyetDinhTuyenDung', $MaQDTD)->update([
                 'NgayQuyetDinhTuyenDung' => $request->NgayQuyetDinhTuyenDung,
                 'ThoiGianThuViec' => $request->ThoiGianThuViec,
                 'MucLuongThuViec' => $request->MucLuongThuViec,
                 'NoiDungQuyetDinhTuyenDung' => $request->NoiDungQuyetDinhTuyenDung,
+                'MaNV' => $request->MaNV,
                 'MaPhongBan' => $request->MaPhongBan,
             ]);
             $QDTD = $this->quyetDinhTuyenDung->find($MaQDTD);
@@ -90,7 +89,7 @@ class QuyetDinhTuyenDungController
         }
 
         try {
-            $this->quyetDinhTuyenDung->where('MaQDTD', $MaQDTD)->delete();
+            $this->quyetDinhTuyenDung->where('SoQuyetDinhTuyenDung', $MaQDTD)->delete();
             return response()->json(['message' => 'Xoa thanh cong.'], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -99,5 +98,4 @@ class QuyetDinhTuyenDungController
             ], 500);
         }
     }
-
 }
