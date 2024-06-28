@@ -92,10 +92,12 @@
                                         <td>
                                             <a href="{{ route('admin.nhanvien.edit', $nhanvien->MaNV) }}"
                                                class="btn btn-green btn-primary w-auto">Chỉnh sửa</a>
-                                            <form action="{{ route('admin.nhanvien.delete', $nhanvien->MaNV) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('admin.nhanvien.delete', $nhanvien->MaNV) }}"
+                                                  method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('delete')
-                                                <button type="submit" class="btn btn-red btn-primary w-auto">Xóa</button>
+                                                <button type="submit" class="btn btn-red btn-primary w-auto">Xóa
+                                                </button>
                                             </form>
 
                                         </td>
@@ -112,7 +114,7 @@
             </div>
         </div>
     </div>
-    @include('nhanvien.create')
+    @include('func.nhanvien.create')
 
     <!-- Include Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

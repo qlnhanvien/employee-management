@@ -17,7 +17,7 @@ class ChiTietBangChamCong extends Model
         'CheckIn',
         'CheckOut',
         'Date',
-        'TotalTiem',
+        'TotalTime',
         'Note',
     ];
 

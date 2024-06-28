@@ -10,6 +10,7 @@ class BangChamCong extends Model
     use HasFactory;
 
     protected $table = 'BangChamCong';
+    protected $primaryKey = 'MaBangChamCong';
 
     protected $fillable = [
         'MaBangChamCong',
