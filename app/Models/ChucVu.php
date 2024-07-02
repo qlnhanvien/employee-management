@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class ChucVu extends Model
 {
     use HasFactory;
 
     protected $table = 'ChucVu';
+    protected $primaryKey = 'MaChucVu';
+    public $incrementing = true;
 
     protected $fillable = [
-        'MaChucVu',
         'TenChucVu',
         'HeSoLuong',
         'PhuCapChucVu',
@@ -22,5 +24,4 @@ class ChucVu extends Model
     {
         return $this->hasMany(QuyetDinhChucVu::class, 'MaChucVu', 'MaChucVu');
     }
-
 }

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ChiTietQuyetDinhChucVu', function (Blueprint $table) {
-            $table->string('SoQuyetDinhChucVu');
-            $table->string('MaChucVu');
+            $table->unsignedBigInteger('SoQuyetDinhChucVu');
+            $table->unsignedBigInteger('MaChucVu');
             $table->foreign('SoQuyetDinhChucVu')->references('SoQuyetDinhChucVu')->on('QuyetDinhChucVu');
             $table->foreign('MaChucVu')->references('MaChucVu')->on('ChucVu');
             $table->timestamps();

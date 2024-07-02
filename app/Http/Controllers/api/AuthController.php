@@ -95,7 +95,6 @@ class AuthController
     {
         try {
             $token = DB::table('password_resets')
-                ->select('token')
                 ->where('token', $request->token)
                 ->where('email', $request->email)
                 ->first();
@@ -103,7 +102,6 @@ class AuthController
             if(!$token) {
                 return response()->json(['message' => 'Invalid token.'], 404);
             }
-
             if (now()->subMinutes(config('auth.passwords.users.expire'))->isAfter($token->created_at)) {
                 return response()->json(['message' => 'This password reset token is invalid or has expired.'], 404);
             }
@@ -115,7 +113,6 @@ class AuthController
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()->all()], 422);
             }
-
             User::where('email', $request->email)
                 ->update(['password' => Hash::make($request->password)]);
 
@@ -123,13 +120,10 @@ class AuthController
 
             return response()->json(['message' => 'Your password has been reset successfully.'], 200);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to reset password.',
-                'error' => $e->getMessage()
-            ], 500);
+            return response()->json(['message' => 'Failed to reset password.','error' => $e->getMessage()], 500);
         }
     }
-    public function logoutApi(Request $request)
+    public function logout(Request $request)
     {
         $token = $request->bearerToken();
 

@@ -3,15 +3,21 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Requests\QDTD\QDTDRequest;
+use App\Models\NhanVien;
+use App\Models\PhongBan;
 use App\Models\QuyetDinhTuyenDung;
 use Illuminate\Http\Request;
 
 class QuyetDinhTuyenDungController
 {
     private $quyetDinhTuyenDung;
-    public function __construct(quyetDinhTuyenDung $quyetDinhTuyenDung)
+    private $nhanVien;
+    private $phongBan;
+    public function __construct(quyetDinhTuyenDung $quyetDinhTuyenDung, NhanVien $nhanVien, PhongBan $phongBan)
     {
         $this->quyetDinhTuyenDung = $quyetDinhTuyenDung;
+        $this->nhanVien = $nhanVien;
+        $this->phongBan = $phongBan;
     }
 
     public function getAll()
@@ -40,6 +46,19 @@ class QuyetDinhTuyenDungController
     public function create(QDTDRequest $request)
     {
         try {
+            $nhanVien = $this->nhanVien->where('MaNV', $request->MaNV)->first();
+            $maPhongBan = $this->phongBan->where('MaPhongBan', $request->MaPhongBan)->first();
+
+            if (!$nhanVien || !$maPhongBan) {
+                return response()->json(['error' => 'Nhan vien hoac phong ban khong ton tai'], 404);
+            }
+
+            $quyetDinhTuyenDung = $this->quyetDinhTuyenDung->where('MaNV', $request->MaNV)->where('MaPhongBan', $request->MaPhongBan)->first();
+
+            if ($quyetDinhTuyenDung) {
+                return response()->json(['error' => 'Quyet dinh tuyen dung da ton tai'], 404);
+            }
+
             $quyetDinhTuyenDung = $this->quyetDinhTuyenDung->create([
                 'NgayQuyetDinhTuyenDung' => $request->NgayQuyetDinhTuyenDung,
                 'ThoiGianThuViec' => $request->ThoiGianThuViec,
@@ -50,7 +69,7 @@ class QuyetDinhTuyenDungController
             ]);
             return response()->json(['quyetdinh' => $quyetDinhTuyenDung], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Them that bai','error' => $e->getMessage()], 500);
         }
     }
 
@@ -61,6 +80,14 @@ class QuyetDinhTuyenDungController
         if (!$QDTD) {
             return response()->json(['message' => 'Quyet dinh tuyen dung khong ton tai.'], 404);
         }
+
+        $nhanVien = $this->nhanVien->where('MaNV', $request->MaNV)->first();
+        $maPhongBan = $this->phongBan->where('MaPhongBan', $request->MaPhongBan)->first();
+
+        if (!$nhanVien || !$maPhongBan) {
+            return response()->json(['error' => 'Nhan vien hoac phong ban khong ton tai'], 404);
+        }
+
         try {
             $this->quyetDinhTuyenDung->where('SoQuyetDinhTuyenDung', $MaQDTD)->update([
                 'NgayQuyetDinhTuyenDung' => $request->NgayQuyetDinhTuyenDung,

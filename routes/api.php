@@ -5,6 +5,7 @@ use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\NhanVienController;
 use App\Http\Controllers\api\QuyetDinhTuyenDungController;
 use App\Http\Controllers\api\QuanLyChamCongController;
+use \App\Http\Controllers\api\QuanLyChucVuController;
 use App\Http\Middleware\UserAuthen;
 use Illuminate\Support\Facades\Route;
 
@@ -40,5 +41,18 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/delete/{MaNV}/{MaBCC}', [QuanLyChamCongController::class, 'delete']);
     });
 
-    Route::post('logout', [AuthController::class, 'logoutApi']);
+    Route::prefix('QLCV')->group(function () {
+        Route::get('/getAll', [QuanLyChucVuController::class, 'getAll']);
+        Route::get('/getId/{MaCV}', [QuanLyChucVuController::class, 'getID']);
+        Route::post('/create', [QuanLyChucVuController::class, 'create']);
+        Route::post('/update/{MaCV}', [QuanLyChucVuController::class, 'update']);
+        Route::delete('/delete/{MaCV}', [QuanLyChucVuController::class, 'delete']);
+    });
+
+    Route::prefix('proFile')->group(function () {
+        Route::get('/get', [AdminController::class, 'getProfile']);
+        Route::post('/update', [AdminController::class, 'updateProfile']);
+    });
+
+    Route::post('logout', [AuthController::class, 'logout']);
 });
