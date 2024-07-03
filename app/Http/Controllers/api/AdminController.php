@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Exports\AdminExport;
 use App\Models\HopDong;
 use App\Models\NhanVien;
 use App\Models\PhongBan;
@@ -9,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use \Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class AdminController
 {
@@ -21,7 +24,6 @@ class AdminController
         $this->hopDong = $hopDong;
         $this->phongBan = $phongBan;
     }
-
     public function dashboardApi()
     {
         $nhanViens = $this->nhanVien->with('chiTietBangChamCongs')->paginate(10);
@@ -67,6 +69,12 @@ class AdminController
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
 
+    public function export(Request $request): BinaryFileResponse
+    {
+        $criteria = $request->only(['name', 'email']);
+        $fileName = 'admins_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new AdminExport($criteria),  $fileName);
     }
 }

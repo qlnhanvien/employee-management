@@ -8,7 +8,6 @@ use App\Models\ChucVu;
 class QuanLyChucVuController
 {
     private $chucVu;
-
     public function __construct(ChucVu $chucVu)
     {
         $this->chucVu = $chucVu;
@@ -53,7 +52,6 @@ class QuanLyChucVuController
         }
 
     }
-
     public function update(ChucVuRequest $request, $MaCV)
     {
         try {

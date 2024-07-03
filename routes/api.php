@@ -16,6 +16,8 @@ Route::post('reset-password/{token}', [AuthController::class, 'resetPassword'])-
 
 Route::middleware('auth:api')->group(function () {
     Route::get('dashboardApi', [AdminController::class, 'dashboardApi']);
+    Route::get('export', [AdminController::class, 'export']);
+    Route::post('import', [AdminController::class, 'import']);
 
     Route::prefix('nhanvien')->group(function () {
         Route::get('/getAll', [NhanVienController::class, 'getAll']);
