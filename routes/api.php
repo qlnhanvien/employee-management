@@ -7,6 +7,7 @@ use App\Http\Controllers\api\QuyetDinhTuyenDungController;
 use App\Http\Controllers\api\QuanLyChamCongController;
 use \App\Http\Controllers\api\QuanLyChucVuController;
 use App\Http\Middleware\UserAuthen;
+use \App\Http\Controllers\api\QuanLiBaoHiemController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('register', [AuthController::class, 'registerApi'])->withoutMiddleware([UserAuthen::class]);
@@ -17,7 +18,6 @@ Route::post('reset-password/{token}', [AuthController::class, 'resetPassword'])-
 Route::middleware('auth:api')->group(function () {
     Route::get('dashboardApi', [AdminController::class, 'dashboardApi']);
     Route::get('export', [AdminController::class, 'export']);
-    Route::post('import', [AdminController::class, 'import']);
 
     Route::prefix('nhanvien')->group(function () {
         Route::get('/getAll', [NhanVienController::class, 'getAll']);
@@ -49,6 +49,14 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/create', [QuanLyChucVuController::class, 'create']);
         Route::post('/update/{MaCV}', [QuanLyChucVuController::class, 'update']);
         Route::delete('/delete/{MaCV}', [QuanLyChucVuController::class, 'delete']);
+    });
+
+    Route::prefix('QLBH')->group(function () {
+        Route::get('/getAll', [QuanLiBaoHiemController::class, 'getAll']);
+        Route::get('/getId/{MaBH}', [QuanLiBaoHiemController::class, 'getID']);
+        Route::post('/create', [QuanLiBaoHiemController::class, 'create']);
+        Route::post('/update/{MaBH}', [QuanLiBaoHiemController::class, 'update']);
+        Route::delete('/delete/{MaBH}', [QuanLiBaoHiemController::class, 'delete']);
     });
 
     Route::prefix('proFile')->group(function () {

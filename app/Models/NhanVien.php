@@ -29,19 +29,6 @@ class NhanVien extends Model
 //        'MaNV' => 'string',
 //    ];
 
-    public static function generateMaNV()
-    {
-        $lastNhanVien = self::orderBy('MaNV', 'desc')->first();
-
-        if (!$lastNhanVien) {
-            return 'NV-001';
-        }
-
-        $lastIdNumber = (int)Str::after($lastNhanVien->MaNV, 'NV-');
-        $newIdNumber = $lastIdNumber + 1;
-        return 'NV-' . str_pad($newIdNumber, 3, '0', STR_PAD_LEFT);
-    }
-
     public function chiTietBangChamCongs()
     {
         return $this->hasMany(ChiTietBangChamCong::class, 'MaNV', 'MaNV');

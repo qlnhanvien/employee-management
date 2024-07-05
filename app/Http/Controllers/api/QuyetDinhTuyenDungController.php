@@ -6,7 +6,6 @@ use App\Http\Requests\QDTD\QDTDRequest;
 use App\Models\NhanVien;
 use App\Models\PhongBan;
 use App\Models\QuyetDinhTuyenDung;
-use Illuminate\Http\Request;
 
 class QuyetDinhTuyenDungController
 {
@@ -25,7 +24,6 @@ class QuyetDinhTuyenDungController
         $quyetDinhTuyenDungs = $this->quyetDinhTuyenDung->all();
         return response()->json(['quyetDinhTuyenDungs' => $quyetDinhTuyenDungs], 200);
     }
-
     public function getId($MaQDTD)
     {
         try {
@@ -42,7 +40,6 @@ class QuyetDinhTuyenDungController
             ], 500);
         }
     }
-
     public function create(QDTDRequest $request)
     {
         try {
@@ -72,7 +69,6 @@ class QuyetDinhTuyenDungController
             return response()->json(['message' => 'Them that bai','error' => $e->getMessage()], 500);
         }
     }
-
     public function update(QDTDRequest $request, $MaQDTD)
     {
         $QDTD = $this->quyetDinhTuyenDung->find($MaQDTD);
@@ -106,7 +102,6 @@ class QuyetDinhTuyenDungController
             ], 500);
         }
     }
-
     public function delete($MaQDTD)
     {
         $QDTD = $this->quyetDinhTuyenDung->find($MaQDTD);

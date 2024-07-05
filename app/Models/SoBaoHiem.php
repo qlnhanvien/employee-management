@@ -16,12 +16,12 @@ class SoBaoHiem extends Model
         'MaNv',
         'NgayLapSoBaoHiem',
         'ThoiHanSoBaoHiem',
-        'MaBaoHiem',
+        'idBH',
     ];
 
     public function baoHiem()
     {
-        return $this->belongsTo(BaoHiem::class, 'MaBaoHiem', 'MaBaoHiem');
+        return $this->belongsTo(BaoHiem::class, 'idBH', 'idBH');
     }
 
     public function nhanVien()

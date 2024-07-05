@@ -10,13 +10,17 @@ class BaoHiem extends Model
     use HasFactory;
 
     protected $table = 'BaoHiem';
+    protected $primaryKey = 'idBH';
+    public $incrementing = true;
 
     protected $fillable = [
         'MaBaoHiem',
+        'TenBaoHiem',
+        'TileBaoHiem',
     ];
 
     public function soBaohiem()
     {
-        return $this->hasMany(SoBaoHiem::class, 'MaBaoHiem', 'MaBaoHiem');
+        return $this->hasMany(SoBaoHiem::class, 'idBH', 'idBH');
     }
 }

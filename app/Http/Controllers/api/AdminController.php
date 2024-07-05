@@ -35,13 +35,11 @@ class AdminController
             'hopDongs'=>$hopDongs
         ],200);
     }
-
     public function getProfile() {
 
         $admin = auth()->user();
         return response()->json($admin, 200);
     }
-
     public function updateProfile(Request $request)
     {
         try {
@@ -70,7 +68,6 @@ class AdminController
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
     public function export(Request $request): BinaryFileResponse
     {
         $criteria = $request->only(['name', 'email']);

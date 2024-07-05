@@ -7,7 +7,6 @@ use App\Http\Requests\QLCC\ChamCongUpdateRequest;
 use App\Models\BangChamCong;
 use App\Models\ChiTietBangChamCong;
 use App\Models\NhanVien;
-use Illuminate\Http\Request;
 
 class QuanLyChamCongController
 {

@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('SoBaoHiem', function (Blueprint $table) {
             $table->string('MaSoBaoHiem')->primary();
-            $table->string('MaNv');
+            $table->string('MaNV');
             $table->date('NgayLapSoBaoHiem');
             $table->date('ThoiHanSoBaoHiem');
-            $table->string('MaBaoHiem');
-            $table->foreign('MaNv')->references('MaNV')->on('NhanVien');
-            $table->foreign('MaBaoHiem')->references('MaBaoHiem')->on('BaoHiem');
+            $table->unsignedBigInteger('idBH');
+            $table->foreign('MaNV')->references('MaNV')->on('NhanVien');
+            $table->foreign('idBH')->references('idBH')->on('BaoHiem');
             $table->timestamps();
         });
     }

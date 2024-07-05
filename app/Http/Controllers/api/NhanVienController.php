@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Requests\NhanVien\NhanVienCreateRequest;
 use App\Http\Requests\NhanVien\NhanVienUpdateRequest;
 use App\Models\NhanVien;
@@ -38,7 +39,7 @@ class NhanVienController
     public function create(NhanVienCreateRequest $request)
     {
         try {
-            $maNV = NhanVien::generateMaNV();
+            $maNV = UtilityHelper::generate('NV-', 'NhanVien', 'MaNV');
             $nhanVien = $this->nhanVien->create([
                 'MaNV' => $maNV,
                 'TenNV' => $request->TenNV,
